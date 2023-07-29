@@ -1,5 +1,6 @@
 package com.tugalsan.api.file.gif.server;
 
+import com.tugalsan.api.file.gif.server.core.TS_FileGifWriterCoreUtils;
 import java.awt.image.RenderedImage;
 import java.nio.file.Path;
 
@@ -9,7 +10,7 @@ public class TS_FileGifWriter {
         this.file = file;
         this.timeBetweenFramesMS = timeBetweenFramesMS;
         this.loopContinuously = loopContinuously;
-        this.writerBall = TS_FileGifWriterUtils.openARGB(file, timeBetweenFramesMS, loopContinuously).orElse(null);
+        this.writerBall = TS_FileGifWriterCoreUtils.openARGB(file, timeBetweenFramesMS, loopContinuously).orElse(null);
     }
     final public Path file;
     final public long timeBetweenFramesMS;
@@ -30,11 +31,11 @@ public class TS_FileGifWriter {
         if (!isReadyToAccept()) {
             return false;
         }
-        return TS_FileGifWriterUtils.append(writerBall, img);
+        return TS_FileGifWriterCoreUtils.append(writerBall, img);
     }
 
     public void close() {
         closed = true;
-        TS_FileGifWriterUtils.close(writerBall);
+        TS_FileGifWriterCoreUtils.close(writerBall);
     }
 }

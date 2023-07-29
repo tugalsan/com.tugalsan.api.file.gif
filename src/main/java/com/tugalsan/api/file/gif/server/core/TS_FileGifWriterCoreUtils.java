@@ -1,5 +1,6 @@
-package com.tugalsan.api.file.gif.server;
+package com.tugalsan.api.file.gif.server.core;
 
+import com.tugalsan.api.file.gif.server.TS_FileGifWriterBall;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
@@ -10,7 +11,7 @@ import javax.imageio.*;
 import javax.imageio.metadata.*;
 import javax.imageio.stream.FileImageOutputStream;
 
-public class TS_FileGifWriterUtils {
+public class TS_FileGifWriterCoreUtils {
 
     public static Optional<TS_FileGifWriterBall> openARGB(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
         return open(file, BufferedImage.TYPE_INT_ARGB, timeBetweenFramesMS, loopContinuously);
@@ -48,15 +49,15 @@ public class TS_FileGifWriterUtils {
             var imageMetaData = gifWriter.getDefaultImageMetadata(imageTypeSpecifier, imageWriteParam);
             var metaFormatName = imageMetaData.getNativeMetadataFormatName();
             var root = (IIOMetadataNode) imageMetaData.getAsTree(metaFormatName);
-            var graphicsControlExtensionNode = TS_FileGifWriterUtils.find(root, "GraphicControlExtension");
+            var graphicsControlExtensionNode = TS_FileGifWriterCoreUtils.find(root, "GraphicControlExtension");
             graphicsControlExtensionNode.setAttribute("disposalMethod", "none");
             graphicsControlExtensionNode.setAttribute("userInputFlag", "FALSE");
             graphicsControlExtensionNode.setAttribute("transparentColorFlag", "FALSE");
             graphicsControlExtensionNode.setAttribute("delayTime", Integer.toString((int) timeBetweenFramesMS / 10));
             graphicsControlExtensionNode.setAttribute("transparentColorIndex", "0");
-            var commentsNode = TS_FileGifWriterUtils.find(root, "CommentExtensions");
-            commentsNode.setAttribute("CommentExtension", "Created by " + TS_FileGifWriterUtils.class.getName());
-            var appEntensionsNode = TS_FileGifWriterUtils.find(root, "ApplicationExtensions");
+            var commentsNode = TS_FileGifWriterCoreUtils.find(root, "CommentExtensions");
+            commentsNode.setAttribute("CommentExtension", "Created by " + TS_FileGifWriterCoreUtils.class.getName());
+            var appEntensionsNode = TS_FileGifWriterCoreUtils.find(root, "ApplicationExtensions");
             var child = new IIOMetadataNode("ApplicationExtension");
             child.setAttribute("applicationID", "NETSCAPE");
             child.setAttribute("authenticationCode", "2.0");
