@@ -4,7 +4,7 @@ import com.tugalsan.api.file.gif.server.core.TS_FileGifWriterCoreUtils;
 import java.awt.image.RenderedImage;
 import java.nio.file.Path;
 
-public class TS_FileGifWriter {
+public class TS_FileGifWriter implements AutoCloseable {
 
     private TS_FileGifWriter(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
         this.file = file;
@@ -34,6 +34,7 @@ public class TS_FileGifWriter {
         return TS_FileGifWriterCoreUtils.append(writerBall, img);
     }
 
+    @Override
     public void close() {
         closed = true;
         TS_FileGifWriterCoreUtils.close(writerBall);
