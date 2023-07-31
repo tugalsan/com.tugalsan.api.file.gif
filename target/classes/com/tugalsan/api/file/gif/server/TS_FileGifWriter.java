@@ -17,7 +17,7 @@ public class TS_FileGifWriter {
     final public boolean loopContinuously;
     final private TS_FileGifWriterBall writerBall;
 
-    public static TS_FileGifWriter of(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
+    public static TS_FileGifWriter open(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
         return new TS_FileGifWriter(file, timeBetweenFramesMS, loopContinuously);
     }
 
