@@ -28,6 +28,9 @@ public class TS_FileGifWriter implements AutoCloseable {
     }
 
     public boolean accept(RenderedImage img) {
+        if (img == null){
+            return false;
+        }
         if (!isReadyToAccept()) {
             return false;
         }
