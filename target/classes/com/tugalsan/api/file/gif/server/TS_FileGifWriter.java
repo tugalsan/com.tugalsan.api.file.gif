@@ -34,7 +34,7 @@ public class TS_FileGifWriter implements AutoCloseable {
         return closed || writerBall != null;
     }
 
-    public boolean add(RenderedImage img) {
+    public boolean write(RenderedImage img) {
         if (img == null) {
             return false;
         }
