@@ -3,12 +3,14 @@ package com.tugalsan.api.file.gif.server;
 import com.tugalsan.api.file.gif.server.core.TS_FileGifWriterCoreUtils;
 import java.awt.image.RenderedImage;
 import java.nio.file.Path;
+import java.time.Duration;
 
 public class TS_FileGifWriter implements AutoCloseable {
 
     private TS_FileGifWriter(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
         this.file = file;
         this.timeBetweenFramesMS = timeBetweenFramesMS;
+        this.dur_timeBetweenFramesMS = Duration.ofMillis(timeBetweenFramesMS);
         this.loopContinuously = loopContinuously;
         this.writerBall = TS_FileGifWriterCoreUtils.openARGB(file, timeBetweenFramesMS, loopContinuously).orElse(null);
     }
@@ -16,6 +18,11 @@ public class TS_FileGifWriter implements AutoCloseable {
     final public long timeBetweenFramesMS;
     final public boolean loopContinuously;
     final private TS_FileGifWriterBall writerBall;
+
+    public Duration timeBetweenFramesMS() {
+        return dur_timeBetweenFramesMS;
+    }
+    final public Duration dur_timeBetweenFramesMS;
 
     public static TS_FileGifWriter open(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
         return new TS_FileGifWriter(file, timeBetweenFramesMS, loopContinuously);
@@ -28,7 +35,7 @@ public class TS_FileGifWriter implements AutoCloseable {
     }
 
     public boolean accept(RenderedImage img) {
-        if (img == null){
+        if (img == null) {
             return false;
         }
         if (!isReadyToAccept()) {
