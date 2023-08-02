@@ -22,7 +22,7 @@ public class TS_FileGifWriter implements AutoCloseable {
     public Duration timeBetweenFramesMS() {
         return dur_timeBetweenFramesMS;
     }
-    final public Duration dur_timeBetweenFramesMS;
+    final private Duration dur_timeBetweenFramesMS;
 
     public static TS_FileGifWriter open(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
         return new TS_FileGifWriter(file, timeBetweenFramesMS, loopContinuously);
