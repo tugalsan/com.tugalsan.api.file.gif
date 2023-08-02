@@ -1,0 +1,4 @@
+com\tugalsan\api\file\gif\server\TS_FileGifWriterBall.class
+com\tugalsan\api\file\gif\server\TS_FileGifWriter.class
+module-info.class
+com\tugalsan\api\file\gif\server\core\TS_FileGifWriterCoreUtils.class
