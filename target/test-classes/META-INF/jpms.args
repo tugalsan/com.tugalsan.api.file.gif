@@ -1,6 +1,4 @@
 --add-modules
-jdk.incubator.concurrent
---add-modules
 jdk.incubator.vector
 --patch-module
 com.tugalsan.api.file.gif=_
