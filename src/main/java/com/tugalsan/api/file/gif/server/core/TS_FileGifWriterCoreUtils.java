@@ -1,9 +1,10 @@
 package com.tugalsan.api.file.gif.server.core;
 
 import com.tugalsan.api.file.gif.server.TS_FileGifWriterBall;
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.api.union.client.TGS_Union;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.stream.*;
@@ -26,24 +27,23 @@ public class TS_FileGifWriterCoreUtils {
         return meta == null ? Optional.empty() : Optional.of(new TS_FileGifWriterBall(gifWriter, meta, timeBetweenFramesMS));
     }
 
-    private static Optional<ImageWriter> createWriter() {
-        return TGS_UnSafe.call(() -> {
+    private static TGS_Union<ImageWriter> createWriter() {
+        try {
             var iter = ImageIO.getImageWritersBySuffix("gif");
             if (!iter.hasNext()) {
                 throw new IIOException("No GIF Image Writers Exist");
             } else {
                 var iw = iter.next();
 
-                return Optional.of(iw);
+                return TGS_Union.of(iw);
             }
-        }, e -> {
-            e.printStackTrace();
-            return Optional.empty();
-        });
+        } catch (IIOException e) {
+            return TGS_Union.ofThrowable(e);
+        }
     }
 
-    private static Optional<IIOMetadata> openWriter(Path file, ImageWriter gifWriter, int imageType, long timeBetweenFramesMS, boolean loopContinuously) {
-        return TGS_UnSafe.call(() -> {
+    private static TGS_Union<IIOMetadata> openWriter(Path file, ImageWriter gifWriter, int imageType, long timeBetweenFramesMS, boolean loopContinuously) {
+        try {
             var imageWriteParam = gifWriter.getDefaultWriteParam();
             var imageTypeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(imageType);
             var imageMetaData = gifWriter.getDefaultImageMetadata(imageTypeSpecifier, imageWriteParam);
@@ -69,31 +69,28 @@ public class TS_FileGifWriterCoreUtils {
             gifWriter.prepareWriteSequence(null);
             imageWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
             imageWriteParam.setCompressionType("LZW");
-            return Optional.of(imageMetaData);
-        }, e -> {
-            e.printStackTrace();
-            return Optional.empty();
-        });
+            return TGS_Union.of(imageMetaData);
+        } catch (IOException e) {
+            return TGS_Union.ofThrowable(e);
+        }
     }
 
-    public static boolean append(TS_FileGifWriterBall writerBall, RenderedImage img) {
-        return TGS_UnSafe.call(() -> {
+    public static TGS_Union<Boolean> append(TS_FileGifWriterBall writerBall, RenderedImage img) {
+        try {
             writerBall.gifWriter().writeToSequence(new IIOImage(img, null, writerBall.meta()), writerBall.gifWriter().getDefaultWriteParam());
-            return true;
-        }, e -> {
-            e.printStackTrace();
-            return false;
-        });
+            return TGS_Union.of(true);
+        } catch (IOException e) {
+            return TGS_Union.ofThrowable(e);
+        }
     }
 
-    public static boolean close(TS_FileGifWriterBall writerBall) {
-        return TGS_UnSafe.call(() -> {
+    public static TGS_Union<Boolean> close(TS_FileGifWriterBall writerBall) {
+        try {
             writerBall.gifWriter().endWriteSequence();
-            return true;
-        }, e -> {
-            e.printStackTrace();
-            return false;
-        });
+            return TGS_Union.of(true);
+        } catch (IOException e) {
+            return TGS_Union.ofThrowable(e);
+        }
     }
 
     private static IIOMetadataNode find(IIOMetadataNode rootNode, String nodeName) {
