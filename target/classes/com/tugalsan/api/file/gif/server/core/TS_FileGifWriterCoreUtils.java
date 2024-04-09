@@ -38,7 +38,7 @@ public class TS_FileGifWriterCoreUtils {
                 return TGS_Union.of(iw);
             }
         } catch (IIOException e) {
-            return TGS_Union.ofThrowable(e);
+            return TGS_Union.ofExcuse(e);
         }
     }
 
@@ -71,7 +71,7 @@ public class TS_FileGifWriterCoreUtils {
             imageWriteParam.setCompressionType("LZW");
             return TGS_Union.of(imageMetaData);
         } catch (IOException e) {
-            return TGS_Union.ofThrowable(e);
+            return TGS_Union.ofExcuse(e);
         }
     }
 
@@ -80,7 +80,7 @@ public class TS_FileGifWriterCoreUtils {
             writerBall.gifWriter().writeToSequence(new IIOImage(img, null, writerBall.meta()), writerBall.gifWriter().getDefaultWriteParam());
             return TGS_Union.of(true);
         } catch (IOException e) {
-            return TGS_Union.ofThrowable(e);
+            return TGS_Union.ofExcuse(e);
         }
     }
 
@@ -89,7 +89,7 @@ public class TS_FileGifWriterCoreUtils {
             writerBall.gifWriter().endWriteSequence();
             return TGS_Union.of(true);
         } catch (IOException e) {
-            return TGS_Union.ofThrowable(e);
+            return TGS_Union.ofExcuse(e);
         }
     }
 

@@ -37,14 +37,14 @@ public class TS_FileGifWriter implements AutoCloseable {
 
     public TGS_Union<Boolean> write(RenderedImage img) {
         if (img == null) {
-            return TGS_Union.ofThrowable(
+            return TGS_Union.ofExcuse(
                     TS_FileGifWriter.class.getSimpleName(),
                     "write",
                     "img == null"
             );
         }
         if (!isReadyToAccept()) {
-            return TGS_Union.ofThrowable(
+            return TGS_Union.ofExcuse(
                     TS_FileGifWriter.class.getSimpleName(),
                     "write",
                     "!isReadyToAccept()"
