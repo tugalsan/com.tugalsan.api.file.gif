@@ -2,6 +2,7 @@ package com.tugalsan.api.file.gif.server;
 
 import com.tugalsan.api.file.gif.server.core.TS_FileGifWriterCoreUtils;
 import com.tugalsan.api.union.client.TGS_Union;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import java.awt.image.RenderedImage;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -35,16 +36,16 @@ public class TS_FileGifWriter implements AutoCloseable {
         return closed || writerBall != null;
     }
 
-    public TGS_Union<Boolean> write(RenderedImage img) {
+    public TGS_UnionExcuse write(RenderedImage img) {
         if (img == null) {
-            return TGS_Union.ofExcuse(
+            return TGS_UnionExcuse.ofExcuse(
                     TS_FileGifWriter.class.getSimpleName(),
                     "write",
                     "img == null"
             );
         }
         if (!isReadyToAccept()) {
-            return TGS_Union.ofExcuse(
+            return TGS_UnionExcuse.ofExcuse(
                     TS_FileGifWriter.class.getSimpleName(),
                     "write",
                     "!isReadyToAccept()"

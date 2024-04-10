@@ -2,6 +2,7 @@ package com.tugalsan.api.file.gif.server.core;
 
 import com.tugalsan.api.file.gif.server.TS_FileGifWriterBall;
 import com.tugalsan.api.union.client.TGS_Union;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
@@ -75,21 +76,21 @@ public class TS_FileGifWriterCoreUtils {
         }
     }
 
-    public static TGS_Union<Boolean> append(TS_FileGifWriterBall writerBall, RenderedImage img) {
+    public static TGS_UnionExcuse append(TS_FileGifWriterBall writerBall, RenderedImage img) {
         try {
             writerBall.gifWriter().writeToSequence(new IIOImage(img, null, writerBall.meta()), writerBall.gifWriter().getDefaultWriteParam());
-            return TGS_Union.of(true);
+            return TGS_UnionExcuse.ofVoid();
         } catch (IOException e) {
-            return TGS_Union.ofExcuse(e);
+            return TGS_UnionExcuse.ofExcuse(e);
         }
     }
 
-    public static TGS_Union<Boolean> close(TS_FileGifWriterBall writerBall) {
+    public static TGS_UnionExcuse close(TS_FileGifWriterBall writerBall) {
         try {
             writerBall.gifWriter().endWriteSequence();
-            return TGS_Union.of(true);
+            return TGS_UnionExcuse.ofVoid();
         } catch (IOException e) {
-            return TGS_Union.ofExcuse(e);
+            return TGS_UnionExcuse.ofExcuse(e);
         }
     }
 
