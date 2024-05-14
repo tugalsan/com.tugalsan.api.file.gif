@@ -1,11 +1,13 @@
 package com.tugalsan.api.file.gif.server.core;
 
 import com.tugalsan.api.file.gif.server.TS_FileGifWriterBall;
+import com.tugalsan.api.log.server.TS_Log;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
+import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.nio.file.Path;
-import java.util.Optional;
 import java.util.stream.*;
 import javax.imageio.*;
 import javax.imageio.metadata.*;
@@ -13,36 +15,40 @@ import javax.imageio.stream.FileImageOutputStream;
 
 public class TS_FileGifWriterCoreUtils {
 
-    public static Optional<TS_FileGifWriterBall> openARGB(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
+    final private static TS_Log d = TS_Log.of(TS_FileGifWriterCoreUtils.class);
+
+    public static TGS_UnionExcuse<TS_FileGifWriterBall> openARGB(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
         return open(file, BufferedImage.TYPE_INT_ARGB, timeBetweenFramesMS, loopContinuously);
     }
 
-    private static Optional<TS_FileGifWriterBall> open(Path file, int imageType, long timeBetweenFramesMS, boolean loopContinuously) {
+    private static TGS_UnionExcuse<TS_FileGifWriterBall> open(Path file, int imageType, long timeBetweenFramesMS, boolean loopContinuously) {
         var gifWriter = createWriter().orElse(null);
         if (gifWriter == null) {
-            return Optional.empty();
+            return TGS_UnionExcuse.ofExcuse(d.className, "open", "gifWriter == null");
         }
         var meta = openWriter(file, gifWriter, imageType, timeBetweenFramesMS, loopContinuously).orElse(null);
-        return meta == null ? Optional.empty() : Optional.of(new TS_FileGifWriterBall(gifWriter, meta, timeBetweenFramesMS));
+        if (meta == null) {
+            return TGS_UnionExcuse.ofExcuse(d.className, "open", "meta == null");
+        }
+        return TGS_UnionExcuse.of(new TS_FileGifWriterBall(gifWriter, meta, timeBetweenFramesMS));
     }
 
-    private static Optional<ImageWriter> createWriter() {
+    private static TGS_UnionExcuse<ImageWriter> createWriter() {
         return TGS_UnSafe.call(() -> {
             var iter = ImageIO.getImageWritersBySuffix("gif");
             if (!iter.hasNext()) {
-                throw new IIOException("No GIF Image Writers Exist");
+                return TGS_UnionExcuse.ofExcuse(d.className, "createWriter", "No GIF Image Writers Exist");
             } else {
                 var iw = iter.next();
 
-                return Optional.of(iw);
+                return TGS_UnionExcuse.of(iw);
             }
         }, e -> {
-            e.printStackTrace();
-            return Optional.empty();
+            return TGS_UnionExcuse.ofExcuse(e);
         });
     }
 
-    private static Optional<IIOMetadata> openWriter(Path file, ImageWriter gifWriter, int imageType, long timeBetweenFramesMS, boolean loopContinuously) {
+    private static TGS_UnionExcuse<IIOMetadata> openWriter(Path file, ImageWriter gifWriter, int imageType, long timeBetweenFramesMS, boolean loopContinuously) {
         return TGS_UnSafe.call(() -> {
             var imageWriteParam = gifWriter.getDefaultWriteParam();
             var imageTypeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(imageType);
@@ -69,30 +75,27 @@ public class TS_FileGifWriterCoreUtils {
             gifWriter.prepareWriteSequence(null);
             imageWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
             imageWriteParam.setCompressionType("LZW");
-            return Optional.of(imageMetaData);
+            return TGS_UnionExcuse.of(imageMetaData);
         }, e -> {
-            e.printStackTrace();
-            return Optional.empty();
+            return TGS_UnionExcuse.ofExcuse(e);
         });
     }
 
-    public static boolean append(TS_FileGifWriterBall writerBall, RenderedImage img) {
+    public static TGS_UnionExcuseVoid append(TS_FileGifWriterBall writerBall, RenderedImage img) {
         return TGS_UnSafe.call(() -> {
             writerBall.gifWriter().writeToSequence(new IIOImage(img, null, writerBall.meta()), writerBall.gifWriter().getDefaultWriteParam());
-            return true;
+            return TGS_UnionExcuseVoid.ofVoid();
         }, e -> {
-            e.printStackTrace();
-            return false;
+            return TGS_UnionExcuseVoid.ofExcuse(e);
         });
     }
 
-    public static boolean close(TS_FileGifWriterBall writerBall) {
+    public static TGS_UnionExcuseVoid close(TS_FileGifWriterBall writerBall) {
         return TGS_UnSafe.call(() -> {
             writerBall.gifWriter().endWriteSequence();
-            return true;
+            return TGS_UnionExcuseVoid.ofVoid();
         }, e -> {
-            e.printStackTrace();
-            return false;
+            return TGS_UnionExcuseVoid.ofExcuse(e);
         });
     }
 

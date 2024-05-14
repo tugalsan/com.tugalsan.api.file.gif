@@ -1,11 +1,15 @@
 package com.tugalsan.api.file.gif.server;
 
 import com.tugalsan.api.file.gif.server.core.TS_FileGifWriterCoreUtils;
+import com.tugalsan.api.log.server.TS_Log;
+import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
 import java.awt.image.RenderedImage;
 import java.nio.file.Path;
 import java.time.Duration;
 
 public class TS_FileGifWriter implements AutoCloseable {
+
+    final private static TS_Log d = TS_Log.of(TS_FileGifWriter.class);
 
     private TS_FileGifWriter(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
         this.file = file;
@@ -34,19 +38,23 @@ public class TS_FileGifWriter implements AutoCloseable {
         return closed || writerBall != null;
     }
 
-    public boolean write(RenderedImage img) {
+    public TGS_UnionExcuseVoid write(RenderedImage img) {
         if (img == null) {
-            return false;
+            return TGS_UnionExcuseVoid.ofExcuse(d.className, "write", "img == null");
         }
         if (!isReadyToAccept()) {
-            return false;
+            return TGS_UnionExcuseVoid.ofExcuse(d.className, "write", "!isReadyToAccept()");
         }
         return TS_FileGifWriterCoreUtils.append(writerBall, img);
     }
 
     @Override
     public void close() {
+        close_withExcuse();
+    }
+
+    public TGS_UnionExcuseVoid close_withExcuse() {
         closed = true;
-        TS_FileGifWriterCoreUtils.close(writerBall);
+        return TS_FileGifWriterCoreUtils.close(writerBall);
     }
 }

@@ -1,0 +1,4 @@
+--patch-module
+com.tugalsan.api.file.gif=_
+--add-reads
+com.tugalsan.api.file.gif=ALL-UNNAMED
