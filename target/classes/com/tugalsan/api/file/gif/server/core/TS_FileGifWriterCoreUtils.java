@@ -4,7 +4,7 @@ import com.tugalsan.api.file.gif.server.TS_FileGifWriterBall;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.nio.file.Path;
@@ -34,7 +34,7 @@ public class TS_FileGifWriterCoreUtils {
     }
 
     private static TGS_UnionExcuse<ImageWriter> createWriter() {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             var iter = ImageIO.getImageWritersBySuffix("gif");
             if (!iter.hasNext()) {
                 return TGS_UnionExcuse.ofExcuse(d.className, "createWriter", "No GIF Image Writers Exist");
@@ -49,7 +49,7 @@ public class TS_FileGifWriterCoreUtils {
     }
 
     private static TGS_UnionExcuse<IIOMetadata> openWriter(Path file, ImageWriter gifWriter, int imageType, long timeBetweenFramesMS, boolean loopContinuously) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             var imageWriteParam = gifWriter.getDefaultWriteParam();
             var imageTypeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(imageType);
             var imageMetaData = gifWriter.getDefaultImageMetadata(imageTypeSpecifier, imageWriteParam);
@@ -82,7 +82,7 @@ public class TS_FileGifWriterCoreUtils {
     }
 
     public static TGS_UnionExcuseVoid append(TS_FileGifWriterBall writerBall, RenderedImage img) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             writerBall.gifWriter().writeToSequence(new IIOImage(img, null, writerBall.meta()), writerBall.gifWriter().getDefaultWriteParam());
             return TGS_UnionExcuseVoid.ofVoid();
         }, e -> {
@@ -91,7 +91,7 @@ public class TS_FileGifWriterCoreUtils {
     }
 
     public static TGS_UnionExcuseVoid close(TS_FileGifWriterBall writerBall) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             writerBall.gifWriter().endWriteSequence();
             return TGS_UnionExcuseVoid.ofVoid();
         }, e -> {
