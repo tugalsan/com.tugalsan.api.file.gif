@@ -14,8 +14,15 @@ import javax.imageio.metadata.*;
 import javax.imageio.stream.FileImageOutputStream;
 
 public class TS_FileGifWriterCoreUtils {
+    
+    private TS_FileGifWriterCoreUtils(){
+        
+    }
 
-    final private static TS_Log d = TS_Log.of(TS_FileGifWriterCoreUtils.class);
+    private static TS_Log d() {
+        return d.orElse(TS_Log.of( TS_FileGifWriterCoreUtils.class));
+    }
+    final private static StableValue<TS_Log> d = StableValue.of();
 
     public static TGS_UnionExcuse<TS_FileGifWriterBall> openARGB(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
         return open(file, BufferedImage.TYPE_INT_ARGB, timeBetweenFramesMS, loopContinuously);
@@ -24,11 +31,11 @@ public class TS_FileGifWriterCoreUtils {
     private static TGS_UnionExcuse<TS_FileGifWriterBall> open(Path file, int imageType, long timeBetweenFramesMS, boolean loopContinuously) {
         var gifWriter = createWriter().orElse(null);
         if (gifWriter == null) {
-            return TGS_UnionExcuse.ofExcuse(d.className, "open", "gifWriter == null");
+            return TGS_UnionExcuse.ofExcuse(d().className, "open", "gifWriter == null");
         }
         var meta = openWriter(file, gifWriter, imageType, timeBetweenFramesMS, loopContinuously).orElse(null);
         if (meta == null) {
-            return TGS_UnionExcuse.ofExcuse(d.className, "open", "meta == null");
+            return TGS_UnionExcuse.ofExcuse(d().className, "open", "meta == null");
         }
         return TGS_UnionExcuse.of(new TS_FileGifWriterBall(gifWriter, meta, timeBetweenFramesMS));
     }
@@ -37,7 +44,7 @@ public class TS_FileGifWriterCoreUtils {
         return TGS_FuncMTCUtils.call(() -> {
             var iter = ImageIO.getImageWritersBySuffix("gif");
             if (!iter.hasNext()) {
-                return TGS_UnionExcuse.ofExcuse(d.className, "createWriter", "No GIF Image Writers Exist");
+                return TGS_UnionExcuse.ofExcuse(d().className, "createWriter", "No GIF Image Writers Exist");
             } else {
                 var iw = iter.next();
 

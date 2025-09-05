@@ -9,7 +9,10 @@ import java.time.Duration;
 
 public class TS_FileGifWriter implements AutoCloseable {
 
-    final private static TS_Log d = TS_Log.of(TS_FileGifWriter.class);
+    private static TS_Log d() {
+        return d.orElse(TS_Log.of( TS_FileGifWriter.class));
+    }
+    final private static StableValue<TS_Log> d = StableValue.of();
 
     private TS_FileGifWriter(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
         this.file = file;
@@ -40,10 +43,10 @@ public class TS_FileGifWriter implements AutoCloseable {
 
     public TGS_UnionExcuseVoid write(RenderedImage img) {
         if (img == null) {
-            return TGS_UnionExcuseVoid.ofExcuse(d.className, "write", "img == null");
+            return TGS_UnionExcuseVoid.ofExcuse(d().className, "write", "img == null");
         }
         if (!isReadyToAccept()) {
-            return TGS_UnionExcuseVoid.ofExcuse(d.className, "write", "!isReadyToAccept()");
+            return TGS_UnionExcuseVoid.ofExcuse(d().className, "write", "!isReadyToAccept()");
         }
         return TS_FileGifWriterCoreUtils.append(writerBall, img);
     }
