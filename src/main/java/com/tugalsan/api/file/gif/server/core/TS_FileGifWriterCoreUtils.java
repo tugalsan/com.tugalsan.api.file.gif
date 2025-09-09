@@ -8,21 +8,19 @@ import com.tugalsan.api.function.client.maythrowexceptions.checked.TGS_FuncMTCUt
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.nio.file.Path;
+import java.util.function.Supplier;
 import java.util.stream.*;
 import javax.imageio.*;
 import javax.imageio.metadata.*;
 import javax.imageio.stream.FileImageOutputStream;
 
 public class TS_FileGifWriterCoreUtils {
-    
-    private TS_FileGifWriterCoreUtils(){
-        
+
+    private TS_FileGifWriterCoreUtils() {
+
     }
 
-    private static TS_Log d() {
-        return d.orElse(TS_Log.of( TS_FileGifWriterCoreUtils.class));
-    }
-    final private static StableValue<TS_Log> d = StableValue.of();
+    final private static Supplier<TS_Log> d = StableValue.supplier(() -> TS_Log.of(TS_FileGifWriterCoreUtils.class));
 
     public static TGS_UnionExcuse<TS_FileGifWriterBall> openARGB(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
         return open(file, BufferedImage.TYPE_INT_ARGB, timeBetweenFramesMS, loopContinuously);
@@ -31,11 +29,11 @@ public class TS_FileGifWriterCoreUtils {
     private static TGS_UnionExcuse<TS_FileGifWriterBall> open(Path file, int imageType, long timeBetweenFramesMS, boolean loopContinuously) {
         var gifWriter = createWriter().orElse(null);
         if (gifWriter == null) {
-            return TGS_UnionExcuse.ofExcuse(d().className, "open", "gifWriter == null");
+            return TGS_UnionExcuse.ofExcuse(d.get().className, "open", "gifWriter == null");
         }
         var meta = openWriter(file, gifWriter, imageType, timeBetweenFramesMS, loopContinuously).orElse(null);
         if (meta == null) {
-            return TGS_UnionExcuse.ofExcuse(d().className, "open", "meta == null");
+            return TGS_UnionExcuse.ofExcuse(d.get().className, "open", "meta == null");
         }
         return TGS_UnionExcuse.of(new TS_FileGifWriterBall(gifWriter, meta, timeBetweenFramesMS));
     }
@@ -44,7 +42,7 @@ public class TS_FileGifWriterCoreUtils {
         return TGS_FuncMTCUtils.call(() -> {
             var iter = ImageIO.getImageWritersBySuffix("gif");
             if (!iter.hasNext()) {
-                return TGS_UnionExcuse.ofExcuse(d().className, "createWriter", "No GIF Image Writers Exist");
+                return TGS_UnionExcuse.ofExcuse(d.get().className, "createWriter", "No GIF Image Writers Exist");
             } else {
                 var iw = iter.next();
 
