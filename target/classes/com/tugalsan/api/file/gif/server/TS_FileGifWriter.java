@@ -6,11 +6,10 @@ import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
 import java.awt.image.RenderedImage;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.function.Supplier;
 
 public class TS_FileGifWriter implements AutoCloseable {
 
-    final private static Supplier<TS_Log> d = StableValue.supplier(() -> TS_Log.of(TS_FileGifWriter.class));
+    final private static TS_Log d = TS_Log.of(TS_FileGifWriter.class);
 
     private TS_FileGifWriter(Path file, long timeBetweenFramesMS, boolean loopContinuously) {
         this.file = file;
@@ -41,10 +40,10 @@ public class TS_FileGifWriter implements AutoCloseable {
 
     public TGS_UnionExcuseVoid write(RenderedImage img) {
         if (img == null) {
-            return TGS_UnionExcuseVoid.ofExcuse(d.get().className, "write", "img == null");
+            return TGS_UnionExcuseVoid.ofExcuse(d.className(), "write", "img == null");
         }
         if (!isReadyToAccept()) {
-            return TGS_UnionExcuseVoid.ofExcuse(d.get().className, "write", "!isReadyToAccept()");
+            return TGS_UnionExcuseVoid.ofExcuse(d.className(), "write", "!isReadyToAccept()");
         }
         return TS_FileGifWriterCoreUtils.append(writerBall, img);
     }
