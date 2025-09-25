@@ -1,9 +1,9 @@
 package com.tugalsan.api.file.gif.server;
 
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.union;
+import module java.desktop;
 import com.tugalsan.api.file.gif.server.core.TS_FileGifWriterCoreUtils;
-import com.tugalsan.api.log.server.TS_Log;
-import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
-import java.awt.image.RenderedImage;
 import java.nio.file.Path;
 import java.time.Duration;
 

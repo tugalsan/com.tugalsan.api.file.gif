@@ -1,17 +1,12 @@
 package com.tugalsan.api.file.gif.server.core;
 
-import com.tugalsan.api.file.gif.server.TS_FileGifWriterBall;
-import com.tugalsan.api.log.server.TS_Log;
-import com.tugalsan.api.union.client.TGS_UnionExcuse;
-import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
-import com.tugalsan.api.function.client.maythrowexceptions.checked.TGS_FuncMTCUtils;
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.nio.file.Path;
+import module com.tugalsan.api.file.gif;
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.union;
+import module com.tugalsan.api.function;
+import module java.desktop;
+import java.nio.file.*;
 import java.util.stream.*;
-import javax.imageio.*;
-import javax.imageio.metadata.*;
-import javax.imageio.stream.FileImageOutputStream;
 
 public class TS_FileGifWriterCoreUtils {
 
